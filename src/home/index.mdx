@@ -1,0 +1,120 @@
+
+# About
+An innovative Warehouse Management System, 'in the cloud' built by people on the ground.
+
+## Technologies
+* Docker (https://www.docker.com/)
+* Github (https://github.com/warehousesheriff)
+* WSL2
+
+## Tech Stack
+* AWS EC2
+* Linux
+* PHP
+* MySQL
+* Mailgun
+* Python
+* Javascript
+* Docker
+* Git
+
+## Setup
+
+* [Windows Requirements](#setup-windows-setup)
+* [MacOS Requirements](#setup-macos-setup)
+
+### Assumptions
+* You have a registered GitHub account
+* You have a registered for a Docker account
+
+### Windows Requirements
+* Docker for Windows (https://docs.docker.com/docker-for-windows/install/)
+* Ubuntu (https://ubuntu.com/tutorials/ubuntu-on-windows#1-overview)
+
+(NOTE: If you are struggling to download Ubuntu, make sure to check if Virtualisation is enabled via "Task Manager -> Performance, if it is disabled, follow steps in link https://2nwiki.2n.cz/pages/viewpage.action?pageId=75202968)
+
+![2021-07-28 (1)](https://user-images.githubusercontent.com/79123022/127264527-7f9ba638-6ebe-4e3c-8e66-33fdace4382d.png)
+
+### MacOS Requirements
+* Docker for Mac (https://docs.docker.com/docker-for-mac/install/)
+* Homebrew (https://brew.sh/)
+
+(NOTE: If there is a missing package error stated when completing one of the steps, install it via Homebrew's installation command "brew install")
+
+### Steps
+1. Make sure you have downloaded all the required files above, then open desired terminal (Ubuntu for Windows)
+
+2. Clone the GitHub to your local system to your desired path:
+```
+$ git clone https://github.com/warehousesheriff/whs_warehouse.git
+```
+
+3. Change your directory so you are in the cloned folder of the project:
+```
+$ cd [insert relative path here]/whs_warehouse
+```
+
+4. Login to Docker via command line with a token given by one of the administrators: (NOTE: you should use "stdin" to input your password for security purposes)
+```
+$ echo [insert Docker token here] | docker login https://docker.pkg.github.com -u [insert your docker username here] --password-stdin
+```
+
+5. Once all the files have been pulled from Docker, do a docker compose command in your terminal.
+```
+$ docker-compose -f docker-compose.yml up
+```
+
+6. Now run:
+```
+$ docker compose exec php composer install
+```
+
+7. Then rename/copy the two ".dist" files in the "configs" directory to a new file removing the ".dist". So from the main directory do as follow:
+```
+$ cp application/configs/application.ini.dist application/configs/application.ini
+$ cp application/configs/cli.ini.dist application/configs/cli.ini
+```
+
+8. Lastly, run this to ensure that the directories are writeable: (NOTE: The git reset command is just needed to put back the .gitkeep files back to their current permissions)
+```
+$ chmod -R 777 data && git reset –hard
+```
+
+9. In the newly made "application/configs/application.ini" file, from lines 16 to 20, edit to the following:
+```
+resources.db.params.host = mysql
+resources.db.params.username = mysql_user
+resources.db.params.password = mysql_password
+resources.db.params.dbname = mysql_database
+```
+
+10. Now to run the server, you must enter this line of code in the project directory every time you start up:
+```
+$ docker compose up -d php
+```
+
+11. If all steps have been followed correctly, you should now be able to see the project on your local system via "localhost"!
+
+## Local System Setup
+TO DO!
+
+
+## Debugging
+Create a new `.vscode/launch.json` file and have this configuration:
+
+```
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Listen for Xdebug",
+            "type": "php",
+            "request": "launch",
+            "port": 9005,
+            "pathMappings": {
+                "/app/public": "${workspaceRoot}"
+            },
+            "hostname": "::"
+        }
+}
+```
