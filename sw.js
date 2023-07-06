@@ -27,21 +27,21 @@ workbox.core.clientsClaim();
  */
 self.__precacheManifest = [
   {
-    "url": "webpack-runtime-49b4b774237619e2e6e5.js"
+    "url": "webpack-runtime-1bd4ad3c36a0593f990f.js"
   },
   {
     "url": "framework-27242794d626e99dc8a9.js"
   },
   {
-    "url": "app-3e0bf280d79399bbb95c.js"
+    "url": "app-27f776f256963262e781.js"
   },
   {
     "url": "offline-plugin-app-shell-fallback/index.html",
-    "revision": "0f9059333bb78fb858c37e5f2fe46361"
+    "revision": "e88bf9848836e8cd3b8b35b2a4aa512f"
   },
   {
     "url": "manifest.webmanifest",
-    "revision": "1d42004cea2b15ca656649beb678cab1"
+    "revision": "a39119e313c3ae6a4aed66a84cd80e43"
   }
 ].concat(self.__precacheManifest || []);
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
@@ -146,12 +146,12 @@ const navigationRoute = new NavigationRoute(async ({ event }) => {
   lastNavigationRequest = event.request.url
 
   let { pathname } = new URL(event.request.url)
-  pathname = pathname.replace(new RegExp(`^`), ``)
+  pathname = pathname.replace(new RegExp(`^/whs-docs`), ``)
 
   // Check for resources + the app bundle
   // The latter may not exist if the SW is updating to a new version
   const resources = await idbKeyval.get(`resources:${pathname}`)
-  if (!resources || !(await caches.match(`/app-3e0bf280d79399bbb95c.js`))) {
+  if (!resources || !(await caches.match(`/whs-docs/app-27f776f256963262e781.js`))) {
     return await fetch(event.request)
   }
 
@@ -164,7 +164,7 @@ const navigationRoute = new NavigationRoute(async ({ event }) => {
     }
   }
 
-  const offlineShell = `/offline-plugin-app-shell-fallback/index.html`
+  const offlineShell = `/whs-docs/offline-plugin-app-shell-fallback/index.html`
   const offlineShellWithKey = workbox.precaching.getCacheKeyForURL(offlineShell)
   return await caches.match(offlineShellWithKey)
 })
